@@ -1,13 +1,161 @@
-<html lang="en" ng-app="">
+<html lang="en">
 <head>
-    <script data-require="angular.js@1.3.10" data-semver="1.3.10" src="https://code.angularjs.org/1.3.10/angular.js"></script>
-    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <style type="text/css">
+        .container{
+            width :70%;
+        }
+        .center {
+            margin: auto;
+            width: 60%;
+            padding: 10px;
+        }
+        .lbl{
+            width:8em;
+            float:left;
+            font-weight:bold;
+        }
+        .inputbx{
+            width:3em;
+            border-style: solid;
+        }
+        .inputbmp{
+            border-style: solid;
+        }
+        .leftcontainer{
+            width:30%;
+            float:left;
+            border: .3em solid;
+            margin-left:auto;
+            margin-right:auto;
+            height:auto;
+            padding-bottom: 6em;
+        }
+        .mrleft{
+            padding-left: 4em;
+        }
+        .lsleft{
+            padding-left: 2em;
+        }
+        .rightcontainer{
+            margin-left:auto;
+            margin-right:auto;
+            height:auto;
+            width:30%;
+            border: .3em solid;
+            padding-bottom: 2em;
+        }
+        .middlecontainer{
+            margin-left:auto;
+            margin-right:auto;
+            height:auto;
+            width:30%;
+            padding-bottom: 2em;
+        }
+        .button{
+           padding-top: 3em;
+        }
+        hr {
+            display: block;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            margin-left: .2em;
+            margin-right: auto;
+            border-style: inset;
+            border-width: 2px;
+        }
+        .hrpad{
+           margin-left: -2em;
+            margin-right: 8em;
+        }
+        .lbltotal{
+            width:11em;
+            text-align:left;
+        }
+        .secondary{
+            float:right;
+            margin-right: 24em;
+        }
+    </style>
 </head>
 <body>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+<script type="text/javascript">
 
-Enter name : <input type="text" ng-model="name">
+    var app = angular.module('myApp',[]);
+    app.controller('myCntrl',function($scope){
+    var totalmealcount = 0;
+    var tip = 0;
 
-<h2>Hello {{name}} !!</h2>
+        $scope.submitform = function(){
+        if($scope.myform.$valid){
+            totalmealcount++;
+            $scope.subtotal = ($scope.BMP * $scope.TR)/100;
+            $scope.tip = Math.round(($scope.BMP * $scope.TP)/100);
+            $scope.total = $scope.subtotal + $scope.tip;
+            $scope.totMC = totalmealcount;
+            tip += $scope.tip;
+            $scope.totaltip = tip;
+            $scope.AvgTipperMeal = $scope.totaltip /  $scope.totMC ;
+        }
+        }
 
+        $scope.reset = function(){
+
+            $scope.subtotal = null;
+            $scope.tip = null;
+            $scope.total = null;
+            $scope.totMC = null;
+            totalmealcount = 0;
+            tip = 0;
+            $scope.totaltip = null;
+            $scope.AvgTipperMeal = null;
+            $scope.BMP = null;
+            $scope.TR = null;
+            $scope.TP = null;
+        }
+
+    });
+
+</script>
+<div  data-ng-app="myApp" data-ng-controller="myCntrl">
+<div class="container">
+    <div class="center"><h1>Waitstaff Calculator</h1></div>
+    <form name="myform" data-ng-submit="submitform()">
+    <div class="leftcontainer">
+        <h2 class="lsleft">Enter the Meal Details</h2><hr>
+        <div class="mrleft">
+           <span class="lbl"> Base Meal Price</span> : $ <input type="number" name="input" class="inputbmp" data-ng-model="BMP" required><br><br>
+            <span class="lbl">Tax Rate </span>: % <input type="number" name="input" class="inputbx" data-ng-model="TR" required><br><br>
+            <span class="lbl"> Tip Percentage </span>: % <input type="number" class="inputbx" name="input" data-ng-model="TP" required><br><br>
+            <p class="button"></p>
+            <button type="submit" class="btn btn-primary" >Submit</button>  <button type="reset" class="btn btn-primary">Cancel</button>
+        </div>
+    </div>
+    </form>
+    <div class="rightcontainer">
+        <h2 class="lsleft">Customer Charges</h2><hr>
+        <div class="mrleft">
+            <span class="lbl"> Subtotal</span> {{subtotal}}<br>
+            <span class="lbl"> Tip</span> {{tip}}<br><span><hr class="hrpad"></span>
+            <span class="lbl"> Total</span> {{total}}<br>
+         </div>
+    </div>
+    <div class="middlecontainer">
+
+    </div>
+    <div class="rightcontainer">
+        <h2 class="lsleft">My Earnings Info</h2><hr>
+        <div class="mrleft">
+            <span class="lbl lbltotal">Tip Total</span>  {{totaltip}}<br>
+            <span class="lbl lbltotal"> Meal count</span>  {{totMC}}<br>
+            <span class="lbl lbltotal"> Average Tip Per Meal</span>  {{AvgTipperMeal}}<br>
+        </div>
+    </div>
+</div>
+<div class="container">
+<button type="reset" class="btn btn-primary secondary" data-ng-click="reset()">Reset</button>
+</div>
+</div>
 </body>
 </html>
